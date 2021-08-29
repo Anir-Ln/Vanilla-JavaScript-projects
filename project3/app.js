@@ -3,6 +3,7 @@ let textEdit = document.getElementById('textToWrite');
 let velocity = document.getElementById('velocity');
 let button = document.querySelector('button');
 let result = document.getElementById('result');
+let scoreHtml = document.getElementById('score');
 let textToWrite;
 let textLength;
 let v = 0;
@@ -10,25 +11,60 @@ let i = 0;
 let cumul = 0;
 let sec = 0;
 let html = '';
-let level = 0;
+let level = 1;
+let score = 0;
+
+const letters = "abcdefghijklmnopqrstuvwxyz";
+const cutters = "   ,  .   , ";
+
+function randomText(numWords, level){
+    let text = '';
+    //number of character between 4 and 8
+    let numChars = 0;
+    let index = 0;
+    for(let i=0; i<numWords; i++){
+        if(i!=0){
+            index = Math.floor(Math.random() * 12);
+            text += cutters[index];
+            if(index == 3 || index === 10 || index == 6)
+                text += ' ';
+        }
+        numChars = Math.floor(4*(Math.random() + 1));
+        for(let j=0; j<numChars; j++){
+            index = Math.floor(Math.random() * (level%26 + 1));
+            text += letters[index];
+        }
+        
+    }
+    text += '.';
+
+    return text;
+}
+
+
+
+
 
 async function myFetch() {
     // let num = rand()
-
     textEdit.innerHTML = "...";
     textEdit.style.display = '';
     result.style.display = 'none';
     velocity.style.display = 'initial';
     button.style.display = "none";
-    let words = Math.max(1, level*5);
-    let response = await fetch('http://dinoipsum.herokuapp.com/api/?format=text&paragraphs=1&words=' + words);
+    let words = level*5;
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    // let response = await fetch('http://dinoipsum.herokuapp.com/api/?format=text&paragraphs=1&words=' + words);
 
-    textToWrite = await response.text();
-    textToWrite = textToWrite.trim();
+    // if (!response.ok) {
+    //     throw new Error(`HTTP error! status: ${response.status}`);
+    // }
+
+    // textToWrite = await response.text();
+    // textToWrite = textToWrite.trim();
+
+    textToWrite = randomText(words, level);
+
     textLength = textToWrite.length;
     textEdit.innerText = textToWrite;
     
@@ -78,9 +114,11 @@ window.addEventListener('keydown', (e) => {
             result.style.display = '';
             result.innerHTML = "YOUR SPEED IS  " + (cumul/sec).toPrecision(2) + " words/min";
             // console.log(result);
-
+            score += parseInt(cumul/sec);
+            scoreHtml.innerHTML = "Score: " + score;
             button.innerText = "Next level";
             button.style.display = "initial";
+            console.log(scoreHtml);
         }
         i++;
         v++;

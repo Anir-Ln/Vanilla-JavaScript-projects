@@ -73,3 +73,7 @@ button:hover {
     font-size: 3rem;
     height: 10%;
 }
+
+#score {
+    margin-bottom: 1rem;
+}
