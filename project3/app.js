@@ -118,7 +118,7 @@ window.addEventListener('keydown', (e) => {
             scoreHtml.innerHTML = "Score: " + score;
             button.innerText = "Next level";
             button.style.display = "initial";
-            console.log(scoreHtml);
+//             console.log(scoreHtml);
         }
         i++;
         v++;
